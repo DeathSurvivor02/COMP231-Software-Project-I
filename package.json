@@ -1,0 +1,19 @@
+{
+  "name": "comp231-scribeflow",
+  "version": "1.0.0",
+  "description": "COMP231 Software Development Project I - Clinical Workflow System",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "keywords": [
+    "agile",
+    "comp231",
+    "centennial-college",
+    "health-tech"
+  ],
+  "author": "Ean Bynoe & COMP231 Team",
+  "license": "MIT"
+}
