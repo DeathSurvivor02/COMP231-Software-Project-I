@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinician Portal | Clinical AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <span class="brand-icon">+</span>
+            Clinical<span class="brand-accent">AI</span>
+        </a>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </header>
+
+    <main class="dashboard-page">
+        <span class="eyebrow">CLINICAL DOCUMENTATION</span>
+        <h1>Clinician Portal</h1>
+        <p>Consultation documentation and clinical review.</p>
+
+        <section class="dashboard-panel">
+            <span class="demo-label">Under Development</span>
+            <h2>Clinical Documentation Workspace</h2>
+            <p>
+                Consultation transcript processing, SOAP note drafting,
+                and clinician approval will be developed here.
+            </p>
+            <p>Module responsibility: Ean</p>
+        </section>
+    </main>
+</body>
+</html>

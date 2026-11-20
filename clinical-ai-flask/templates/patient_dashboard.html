@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Portal | Clinical AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <span class="brand-icon">+</span>
+            Clinical<span class="brand-accent">AI</span>
+        </a>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </header>
+
+    <main class="dashboard-page">
+        <span class="eyebrow">PATIENT EXPERIENCE</span>
+        <h1>Patient Portal</h1>
+        <p>Conversational patient intake and information collection.</p>
+
+        <section class="dashboard-panel">
+            <span class="demo-label">Under Development</span>
+            <h2>Patient Intake Workspace</h2>
+            <p>
+                Patient intake forms, guided chatbot questions,
+                and intake summaries will be developed here.
+            </p>
+            <p>Module responsibilities: Joel and Tanzeef</p>
+        </section>
+    </main>
+</body>
+</html>

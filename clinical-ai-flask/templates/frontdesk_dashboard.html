@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front Desk | Clinical AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <span class="brand-icon">+</span>
+            Clinical<span class="brand-accent">AI</span>
+        </a>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </header>
+
+    <main class="dashboard-page">
+        <span class="eyebrow">FRONT DESK OPERATIONS</span>
+        <h1>Front Desk Portal</h1>
+        <p>Appointment scheduling and receptionist workflows.</p>
+
+        <section class="dashboard-panel">
+            <span class="demo-label">Planned for Iteration 2</span>
+            <h2>Appointment Management</h2>
+            <p>
+                Appointment booking, scheduling, and receptionist
+                functionality will be developed here.
+            </p>
+            <p>Module responsibility: Nick</p>
+        </section>
+    </main>
+</body>
+</html>

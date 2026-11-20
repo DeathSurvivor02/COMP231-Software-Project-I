@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical AI Suite | Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="brand">
+            <span class="brand-icon">+</span>
+            <span>Clinical<span class="brand-accent">AI</span></span>
+        </div>
+
+        <nav>
+            <a href="{{ url_for('home') }}" class="active">Home</a>
+            <a href="{{ url_for('clinician_dashboard') }}">Clinician</a>
+            <a href="{{ url_for('patient_dashboard') }}">Patient</a>
+            <a href="{{ url_for('frontdesk_dashboard') }}">Front Desk</a>
+            <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+        </nav>
+
+        <span class="demo-label">Development Prototype</span>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <span class="eyebrow">CLINICAL WORKFLOW PLATFORM</span>
+                <h1>
+                    Better workflows.<br>
+                    <span>More time for care.</span>
+                </h1>
+                <p>
+                    A unified workspace for clinical documentation,
+                    patient intake, appointment coordination, and
+                    administrative operations.
+                </p>
+                <a href="#modules" class="primary-button">
+                    Explore Modules &rarr;
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="visual-top">
+                    <span class="status-dot"></span>
+                    Clinical AI Workspace
+                    <span class="visual-badge">Prototype</span>
+                </div>
+
+                <div class="visual-body">
+                    <div class="visual-line line-long"></div>
+                    <div class="visual-line line-medium"></div>
+                    <div class="visual-line line-short"></div>
+
+                    <div class="visual-divider"></div>
+
+                    <div class="visual-row">
+                        <span>Clinical notes</span>
+                        <strong>Draft review</strong>
+                    </div>
+
+                    <div class="visual-row">
+                        <span>Patient intake</span>
+                        <strong>Structured forms</strong>
+                    </div>
+
+                    <div class="visual-row">
+                        <span>Appointments</span>
+                        <strong>Scheduling</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="modules" id="modules">
+            <div class="section-heading">
+                <span class="eyebrow">PLATFORM MODULES</span>
+                <h2>One platform. Four workspaces.</h2>
+                <p>Choose a workspace to explore its features.</p>
+            </div>
+
+            <div class="module-grid">
+
+                <!-- CLINICIAN PORTAL - EAN -->
+                <a href="{{ url_for('clinician_dashboard') }}" class="module-card">
+                    <div class="module-icon">01</div>
+                    <h3>Clinician Portal</h3>
+                    <p>
+                        Prepare consultation notes, review SOAP drafts,
+                        and approve clinical documentation.
+                    </p>
+                    <span>Open workspace &rarr;</span>
+                </a>
+
+                <!-- PATIENT PORTAL - JOEL AND TANZEEF -->
+                <a href="{{ url_for('patient_dashboard') }}" class="module-card">
+                    <div class="module-icon">02</div>
+                    <h3>Patient Portal</h3>
+                    <p>
+                        Complete conversational intake and view
+                        appointment information.
+                    </p>
+                    <span>Open workspace &rarr;</span>
+                </a>
+
+                <!-- FRONT DESK PORTAL - NICK (ITERATION 2) -->
+                <a href="{{ url_for('frontdesk_dashboard') }}" class="module-card">
+                    <div class="module-icon">03</div>
+                    <h3>Front Desk</h3>
+                    <p>
+                        Manage appointment requests, scheduling,
+                        and routine patient inquiries.
+                    </p>
+                    <span>Open workspace &rarr;</span>
+                </a>
+
+                <!-- ADMIN PORTAL - SIENNA -->
+                <a href="{{ url_for('admin_dashboard') }}" class="module-card">
+                    <div class="module-icon">04</div>
+                    <h3>Administration</h3>
+                    <p>
+                        Manage user accounts, permissions,
+                        and system access.
+                    </p>
+                    <span>Open workspace &rarr;</span>
+                </a>
+
+            </div>
+        </section>
+
+        <section class="notice">
+            <strong>Demonstration environment</strong>
+            <p>
+                This application is under development and uses
+                synthetic patient information only. AI-generated
+                clinical drafts require review and approval by
+                an authorized clinician.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <span>Clinical AI Suite</span>
+        <span>COMP231 — Group 1 | Centennial College</span>
+    </footer>
+</body>
+</html>
