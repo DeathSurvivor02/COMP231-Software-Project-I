@@ -4,3 +4,10 @@ node_modules/
 *.log
 coverage/
 dist/
+
+# Python / Flask
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/

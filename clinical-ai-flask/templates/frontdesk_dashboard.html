@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front Desk | Clinical AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/frontdesk.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <span class="brand-icon">+</span>
+            Clinical<span class="brand-accent">AI</span>
+        </a>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </header>
+
+    <main class="dashboard-page">
+        <span class="eyebrow">FRONT DESK OPERATIONS</span>
+        <h1>Front Desk Portal</h1>
+        <p>Appointment scheduling and receptionist workflows.</p>
+
+        <section class="dashboard-panel">
+            <h2>Schedule Appointment</h2>
+            <form id="appt-form" class="appt-form">
+                <div class="form-row">
+                    <label for="patient_name">Patient Name</label>
+                    <input type="text" id="patient_name" name="patient_name"
+                           placeholder="e.g. Jane Doe" required>
+                </div>
+                <div class="form-row">
+                    <label for="clinician">Clinician</label>
+                    <input type="text" id="clinician" name="clinician"
+                           placeholder="e.g. Dr. Smith" required>
+                </div>
+                <div class="form-row">
+                    <label for="datetime">Date &amp; Time</label>
+                    <input type="datetime-local" id="datetime" name="datetime" required>
+                </div>
+                <div class="form-row">
+                    <label for="reason">Reason <span class="optional">(optional)</span></label>
+                    <input type="text" id="reason" name="reason"
+                           placeholder="e.g. Follow-up consultation">
+                </div>
+                <button type="submit" class="primary-button">Schedule Appointment</button>
+                <p id="form-msg" class="form-msg" role="status"></p>
+            </form>
+        </section>
+
+        <section class="dashboard-panel">
+            <h2>Today's Queue</h2>
+            <p class="panel-hint">Scheduled appointments for today, ordered by time.</p>
+            <div class="table-wrap">
+                <table id="queue-table" class="appt-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Clinician</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="empty-row"><td colspan="5">No appointments scheduled for today.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <h2>All Appointments</h2>
+            <p class="panel-hint">Complete list, including cancelled appointments.</p>
+            <div class="table-wrap">
+                <table id="all-table" class="appt-table">
+                    <thead>
+                        <tr>
+                            <th>Date &amp; Time</th>
+                            <th>Patient</th>
+                            <th>Clinician</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="empty-row"><td colspan="6">No appointments yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="reschedule-modal" class="modal-overlay" hidden>
+        <div class="modal-content">
+            <h3>Reschedule Appointment</h3>
+            <p id="modal-patient-name" class="panel-hint" style="margin-bottom: 15px;"></p>
+            
+            <form id="reschedule-form">
+                <div class="form-row">
+                    <label for="new-datetime">New Date &amp; Time</label>
+                    <input type="datetime-local" id="new-datetime" required>
+                </div>
+                <p id="modal-msg" class="form-msg error" style="margin-bottom: 10px;"></p>
+                
+                <div class="modal-actions">
+                    <button type="button" class="row-btn" id="modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="primary-button">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="cancel-modal" class="modal-overlay" hidden>
+        <div class="modal-content">
+            <h3>Cancel Appointment</h3>
+            <p style="color: var(--muted); font-size: 14px; margin-top: 10px; margin-bottom: 20px;">
+                Are you sure you want to cancel the appointment for 
+                <strong id="cancel-patient-name" style="color: var(--navy);"></strong>? 
+                This action cannot be undone.
+            </p>
+            
+            <div class="modal-actions">
+                <button type="button" class="row-btn" id="cancel-modal-btn">Keep Appointment</button>
+                <button type="button" class="row-btn danger" id="confirm-cancel-btn" style="background: #b3363a; color: white; border-color: #b3363a;">Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/frontdesk.js') }}"></script>
+</body>
+</html>

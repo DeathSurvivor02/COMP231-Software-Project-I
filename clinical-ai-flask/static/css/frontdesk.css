@@ -1,0 +1,215 @@
+.panel-hint {
+    margin-top: 6px;
+    margin-bottom: 18px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.appt-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 22px;
+    margin-top: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.2px;
+}
+
+.form-row .optional {
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.form-row input {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-row input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(8, 127, 140, 0.12);
+}
+
+.appt-form .primary-button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.form-msg {
+    grid-column: 1 / -1;
+    min-height: 18px;
+    font-size: 13px;
+    color: var(--teal);
+    margin-top: 2px;
+}
+
+.form-msg.error {
+    color: #b3363a;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 8px;
+}
+
+.appt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.appt-table thead th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.appt-table tbody td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #f0f3f5;
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.appt-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.appt-table tbody tr:hover td {
+    background: #fafcfd;
+}
+
+.empty-row td {
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+    padding: 24px 10px;
+}
+
+.status-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 30px;
+    background: var(--teal-light);
+    color: var(--teal);
+}
+
+.status-pill.cancelled {
+    background: #fbeaea;
+    color: #b3363a;
+}
+
+.row-btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--navy);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.row-btn:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+}
+
+.row-btn.danger:hover {
+    border-color: #b3363a;
+    color: #b3363a;
+    background: #fdf3f3;
+}
+
+.row-btn + .row-btn {
+    margin-left: 6px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(18, 38, 58, 0.5);
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 50px rgba(18, 38, 58, 0.15);
+    border: 1px solid var(--border);
+}
+
+.modal-content h3 {
+    color: var(--navy);
+    margin-bottom: 5px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.modal-actions .primary-button {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .appt-form {
+        grid-template-columns: 1fr;
+    }
+
+    .appt-form .primary-button {
+        justify-self: stretch;
+    }
+
+    .appt-table {
+        font-size: 12px;
+    }
+
+    .appt-table thead th,
+    .appt-table tbody td {
+        padding: 10px 8px;
+    }
+}
