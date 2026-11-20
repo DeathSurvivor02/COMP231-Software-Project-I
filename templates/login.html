@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | ScribeFlow</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+<div class="login-layout">
+
+    <!-- LEFT BRANDING PANEL -->
+    <aside class="brand-panel">
+        <div class="brand-header">
+            <div class="brand-mark">S+</div>
+            <div>
+                <h2>ScribeFlow</h2>
+                <span>CLINICAL AI SUITE</span>
+            </div>
+        </div>
+
+        <div class="brand-content">
+            <div class="brand-tag">CLINICAL WORKFLOW PLATFORM</div>
+
+            <h1>Better workflows.<br>
+                <span>More focused care.</span>
+            </h1>
+
+            <p>
+                A unified workspace for clinical documentation,
+                patient intake, and role-based administration.
+            </p>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span class="feature-icon">✚</span>
+                    <div>
+                        <strong>Clinical Documentation</strong>
+                        <small>Structured notes and clinician review</small>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">◇</span>
+                    <div>
+                        <strong>Role-Based Access</strong>
+                        <small>Permissions for each user role</small>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">▦</span>
+                    <div>
+                        <strong>Patient Management</strong>
+                        <small>Organized intake and patient workflows</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand-footer">
+            <span>SCRIBEFLOW © 2026</span>
+            <span>COMP231 PROJECT</span>
+        </div>
+    </aside>
+
+    <!-- RIGHT LOGIN PANEL -->
+    <main class="login-panel">
+        <div class="login-top">
+            <span class="environment-label">
+                <span class="status-dot"></span>
+                DEMO ENVIRONMENT
+            </span>
+        </div>
+
+        <div class="login-card">
+            <div class="welcome-icon">S+</div>
+
+            <span class="form-eyebrow">WELCOME BACK</span>
+            <h2>Sign in to your account</h2>
+
+            <p class="form-description">
+                Enter your credentials to access your
+                ScribeFlow workspace.
+            </p>
+
+            {% if error %}
+            <div class="error-message" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="{{ url_for('login') }}"
+                  method="POST">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="sign-in-btn">
+                    Sign In
+                    <span aria-hidden="true">→</span>
+                </button>
+            </form>
+
+            <div class="security-note">
+                <span aria-hidden="true">◇</span>
+                <p>
+                    Demonstration environment using fictional accounts.
+                    Do not enter real patient information.
+                </p>
+            </div>
+        </div>
+
+        <footer class="login-footer">
+            ScribeFlow Clinical AI Suite · COMP231
+        </footer>
+    </main>
+
+</div>
+</body>
+</html>
