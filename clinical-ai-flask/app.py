@@ -31,8 +31,9 @@
 # ============================================================
 
 from flask import Flask, render_template
-
+from appointments import appointments_bp 
 app = Flask(__name__)
+app.register_blueprint(appointments_bp)
 
 
 # ============================================================
