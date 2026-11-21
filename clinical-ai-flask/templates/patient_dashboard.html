@@ -5,30 +5,217 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Portal | Clinical AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/intake_bot.css') }}">
 </head>
 <body>
     <header class="navbar">
         <a href="{{ url_for('home') }}" class="brand">
             <span class="brand-icon">+</span>
-            Clinical<span class="brand-accent">AI</span>
+            <span>Clinical<span class="brand-accent">AI</span></span>
         </a>
-        <a href="{{ url_for('home') }}">Back to Home</a>
+
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('clinician_dashboard') }}">Clinician</a>
+            <a href="{{ url_for('patient_dashboard') }}" class="active">Patient</a>
+            <a href="{{ url_for('frontdesk_dashboard') }}">Front Desk</a>
+            <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+        </nav>
+
+        <span class="demo-label">Conversational Bot</span>
     </header>
 
-    <main class="dashboard-page">
-        <span class="eyebrow">PATIENT EXPERIENCE</span>
-        <h1>Patient Portal</h1>
-        <p>Conversational patient intake and information collection.</p>
+    <main class="dashboard-page patient-page">
+        <div class="page-header">
+            <div>
+                <span class="eyebrow">PATIENT EXPERIENCE &amp; RECEPTIONIST</span>
+                <h1>Patient Portal</h1>
+                <p>
+                    Complete your pre-visit symptom intake conversationally or ask
+                    our AI Receptionist about clinic hours and appointments.
+                </p>
+            </div>
+            <div class="governance-pill">
+                <span class="dot"></span>
+                No autonomous diagnosis or prescriptions
+            </div>
+        </div>
 
-        <section class="dashboard-panel">
-            <span class="demo-label">Under Development</span>
-            <h2>Patient Intake Workspace</h2>
-            <p>
-                Patient intake forms, guided chatbot questions,
-                and intake summaries will be developed here.
-            </p>
-            <p>Module responsibilities: Joel and Tanzeef</p>
+        <section class="patient-workspace">
+            <!-- LEFT COLUMN: CONVERSATIONAL INTAKE & RECEPTIONIST CHAT -->
+            <div class="dashboard-panel chat-panel">
+                <div class="chat-toolbar">
+                    <div class="mode-tabs" role="tablist" aria-label="Bot mode">
+                        <button type="button"
+                                class="mode-tab active"
+                                id="tab-intake"
+                                data-mode="intake"
+                                role="tab"
+                                aria-selected="true">
+                            Pre-Visit Intake
+                        </button>
+                        <button type="button"
+                                class="mode-tab"
+                                id="tab-receptionist"
+                                data-mode="receptionist"
+                                role="tab"
+                                aria-selected="false">
+                            AI Receptionist &amp; Booking
+                        </button>
+                    </div>
+                    <button type="button" class="reset-btn" id="reset-chat-btn">
+                        New Conversation
+                    </button>
+                </div>
+
+                <div class="intake-progress" id="intake-progress">
+                    <div class="progress-meta">
+                        <span class="progress-title">Guided Intake Progress</span>
+                        <span class="progress-count" id="progress-count">0 / 5 completed</span>
+                    </div>
+                    <div class="progress-steps" id="progress-steps">
+                        <span class="step-pill active" data-step="patient_name">1. Name</span>
+                        <span class="step-pill" data-step="chief_complaint">2. Symptoms</span>
+                        <span class="step-pill" data-step="duration_severity">3. Duration</span>
+                        <span class="step-pill" data-step="associated_symptoms">4. Red Flags</span>
+                        <span class="step-pill" data-step="medical_history">5. History</span>
+                    </div>
+                </div>
+
+                <div class="chat-feed" id="chat-feed" aria-live="polite"></div>
+
+                <div class="quick-replies-wrap">
+                    <span class="chips-label">Suggested replies:</span>
+                    <div class="quick-replies" id="quick-replies"></div>
+                </div>
+
+                <div class="demo-checks-bar">
+                    <span class="chips-label">Validation checks:</span>
+                    <button type="button" class="demo-chip" data-test-msg="">
+                        Test Blank Input
+                    </button>
+                    <button type="button" class="demo-chip" data-test-msg="idk">
+                        Test Vague Answer
+                    </button>
+                    <button type="button" class="demo-chip" data-test-msg="What medicine should I take?">
+                        Test Safety Guardrail
+                    </button>
+                </div>
+
+                <form class="chat-input-bar" id="chat-form" novalidate>
+                    <input type="text"
+                           id="chat-input"
+                           name="message"
+                           autocomplete="off"
+                           placeholder="Type your response or question...">
+                    <button type="submit" class="primary-button" id="send-btn">
+                        Send
+                    </button>
+                </form>
+            </div>
+
+            <!-- RIGHT COLUMN: LIVE INTAKE SUMMARY + RECEPTIONIST SCHEDULING -->
+            <aside class="sidebar-stack">
+                <section class="dashboard-panel summary-panel">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">CLINICIAN HANDOFF PREVIEW</span>
+                            <h2>Live Intake Summary</h2>
+                        </div>
+                        <span class="status-badge in-progress" id="summary-status">
+                            In Progress
+                        </span>
+                    </div>
+                    <p class="panel-hint">
+                        Updates automatically as you answer the guided chatbot questions.
+                    </p>
+
+                    <dl class="summary-list" id="summary-list">
+                        <div class="summary-row">
+                            <dt>Patient Name</dt>
+                            <dd id="sum-patient-name" class="pending">Pending</dd>
+                        </div>
+                        <div class="summary-row">
+                            <dt>Chief Complaint</dt>
+                            <dd id="sum-chief-complaint" class="pending">Pending</dd>
+                        </div>
+                        <div class="summary-row">
+                            <dt>Duration &amp; Severity</dt>
+                            <dd id="sum-duration-severity" class="pending">Pending</dd>
+                        </div>
+                        <div class="summary-row">
+                            <dt>Associated Symptoms</dt>
+                            <dd id="sum-associated-symptoms" class="pending">Pending</dd>
+                        </div>
+                        <div class="summary-row">
+                            <dt>Medical History &amp; Allergies</dt>
+                            <dd id="sum-medical-history" class="pending">Pending</dd>
+                        </div>
+                    </dl>
+
+                    <div class="handoff-note">
+                        Saved intake summaries are accessible via <code>/api/bot/intakes</code>
+                        for clinician review and Joel's patient record workflow.
+                    </div>
+                </section>
+
+                <section class="dashboard-panel booking-panel">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">SYNCED WITH FRONT DESK</span>
+                            <h2>Appointment &amp; Receipt</h2>
+                        </div>
+                        <a href="{{ url_for('frontdesk_dashboard') }}" class="inline-link">
+                            View Queue &rarr;
+                        </a>
+                    </div>
+
+                    <div class="receipt-card" id="receipt-card" hidden>
+                        <div class="receipt-head">
+                            <span class="receipt-badge">BOOKING CONFIRMED</span>
+                            <strong id="receipt-code">CAI-8801</strong>
+                        </div>
+                        <p id="receipt-details"></p>
+                    </div>
+
+                    <form id="quick-book-form" class="quick-book-form">
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="qb-patient">Patient Name</label>
+                                <input type="text" id="qb-patient" placeholder="e.g. Sarah Jenkins" required>
+                            </div>
+                            <div class="field">
+                                <label for="qb-clinician">Clinician</label>
+                                <select id="qb-clinician" required>
+                                    <option value="Dr. Chen">Dr. Chen (General)</option>
+                                    <option value="Dr. Patel">Dr. Patel (Cardiology)</option>
+                                    <option value="Dr. Rivera">Dr. Rivera (Neurology)</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="qb-datetime">Date &amp; Time</label>
+                                <input type="datetime-local" id="qb-datetime" required>
+                            </div>
+                            <div class="field">
+                                <label for="qb-reason">Visit Reason</label>
+                                <input type="text" id="qb-reason" placeholder="e.g. Dry cough &amp; checkup">
+                            </div>
+                        </div>
+                        <button type="submit" class="primary-button book-btn">
+                            Book Appointment Now
+                        </button>
+                        <p class="form-feedback" id="qb-feedback" role="status"></p>
+                    </form>
+
+                    <div class="open-slots-wrap">
+                        <span class="chips-label">Next open clinic slots (click to fill):</span>
+                        <div class="slot-pills" id="slot-pills"></div>
+                    </div>
+                </section>
+            </aside>
         </section>
     </main>
+
+    <script src="{{ url_for('static', filename='js/intake_bot.js') }}"></script>
 </body>
 </html>

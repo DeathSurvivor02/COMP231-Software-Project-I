@@ -30,10 +30,18 @@
 # These routes are placeholders, not completed modules.
 # ============================================================
 
+import os
 from flask import Flask, render_template
-from appointments import appointments_bp 
+from appointments import appointments_bp
+from intake_bot import intake_bot_bp
+
 app = Flask(__name__)
+app.secret_key = os.environ.get(
+    "FLASK_SECRET_KEY",
+    "local-demo-only-replace-before-deployment",
+)
 app.register_blueprint(appointments_bp)
+app.register_blueprint(intake_bot_bp)
 
 
 # ============================================================
