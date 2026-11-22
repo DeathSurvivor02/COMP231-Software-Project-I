@@ -35,6 +35,7 @@ from flask import Flask, render_template
 from appointments import appointments_bp
 from clinical_docs import clinical_docs_bp
 from intake_bot import intake_bot_bp
+from patient_intake import patient_intake_bp, get_statistics, _intakes
 
 app = Flask(__name__)
 app.secret_key = os.environ.get(
@@ -44,6 +45,7 @@ app.secret_key = os.environ.get(
 app.register_blueprint(appointments_bp)
 app.register_blueprint(clinical_docs_bp)
 app.register_blueprint(intake_bot_bp)
+app.register_blueprint(patient_intake_bp)
 
 
 # ============================================================
@@ -72,7 +74,11 @@ def clinician_dashboard():
 
 @app.route("/patient-dashboard")
 def patient_dashboard():
-    return render_template("patient_dashboard.html")
+    return render_template(
+        "patient_dashboard.html",
+        statistics=get_statistics(),
+        intakes=_intakes,
+    )
 
 
 # ============================================================

@@ -6,6 +6,7 @@
     <title>Patient Portal | Clinical AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/intake_bot.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/patient_intake.css') }}">
 </head>
 <body>
     <header class="navbar">
@@ -40,6 +41,18 @@
                 No autonomous diagnosis or prescriptions
             </div>
         </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" style="margin-bottom: 20px;">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
         <section class="patient-workspace">
             <!-- LEFT COLUMN: CONVERSATIONAL INTAKE & RECEPTIONIST CHAT -->
@@ -213,6 +226,97 @@
                     </div>
                 </section>
             </aside>
+        </section>
+
+        <!-- JOEL'S SUBSYSTEM: INTAKE RECORDS & CLINIC METRICS -->
+        <section class="patient-records-section" style="margin-top: 36px;">
+            <div class="records-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <span class="eyebrow">PATIENT EXPERIENCE &amp; INTAKE WORKFLOWS (JOEL)</span>
+                    <h2 style="margin: 4px 0 0; font-size: 22px; color: #192b47;">Patient Intake Records &amp; Status Queue</h2>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="{{ url_for('patient_intake.intake_form_page') }}" class="btn-primary" style="padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; background: #345fd5; color: white; display: inline-flex; align-items: center;">
+                        + New Intake Form
+                    </a>
+                </div>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div class="metric-card" style="background: white; border: 1px solid #d5deeb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Patients</div>
+                    <div style="font-size: 26px; font-weight: 700; color: #192b47; margin-top: 4px;">{{ statistics.total_patients | default(0) }}</div>
+                </div>
+                <div class="metric-card" style="background: white; border: 1px solid #d5deeb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Intakes</div>
+                    <div style="font-size: 26px; font-weight: 700; color: #192b47; margin-top: 4px;">{{ statistics.total_intakes | default(0) }}</div>
+                </div>
+                <div class="metric-card" style="background: white; border: 1px solid #d5deeb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 12px; color: #b78103; font-weight: 600; text-transform: uppercase;">Pending</div>
+                    <div style="font-size: 26px; font-weight: 700; color: #b78103; margin-top: 4px;">{{ statistics.pending_intakes | default(0) }}</div>
+                </div>
+                <div class="metric-card" style="background: white; border: 1px solid #d5deeb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 12px; color: #1a73e8; font-weight: 600; text-transform: uppercase;">In Progress</div>
+                    <div style="font-size: 26px; font-weight: 700; color: #1a73e8; margin-top: 4px;">{{ statistics.in_progress_intakes | default(0) }}</div>
+                </div>
+                <div class="metric-card" style="background: white; border: 1px solid #d5deeb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size: 12px; color: #137333; font-weight: 600; text-transform: uppercase;">Completed</div>
+                    <div style="font-size: 26px; font-weight: 700; color: #137333; margin-top: 4px;">{{ statistics.completed_intakes | default(0) }}</div>
+                </div>
+            </div>
+
+            <!-- Table of Intake Records -->
+            <div style="background: white; border: 1px solid #d5deeb; border-radius: 8px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                    <thead>
+                        <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #475569;">
+                            <th style="padding: 12px 16px;">Patient</th>
+                            <th style="padding: 12px 16px;">DOB</th>
+                            <th style="padding: 12px 16px;">Chief Complaint</th>
+                            <th style="padding: 12px 16px;">Intake Date</th>
+                            <th style="padding: 12px 16px;">Status</th>
+                            <th style="padding: 12px 16px;">Update Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for intake in intakes %}
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px 16px;">
+                                    <strong>{{ intake.patient_name }}</strong>
+                                    {% if intake.phone %}
+                                        <div style="font-size: 12px; color: #64748b;">{{ intake.phone }}</div>
+                                    {% endif %}
+                                </td>
+                                <td style="padding: 12px 16px; color: #475569;">{{ intake.date_of_birth }}</td>
+                                <td style="padding: 12px 16px; color: #1e293b; max-width: 260px;">{{ intake.reason_for_visit }}</td>
+                                <td style="padding: 12px 16px; color: #64748b; font-size: 13px;">{{ intake.intake_date }}</td>
+                                <td style="padding: 12px 16px;">
+                                    <span class="status-badge status-{{ intake.intake_status|lower|replace(' ', '-') }}">
+                                        {{ intake.intake_status }}
+                                    </span>
+                                </td>
+                                <td style="padding: 12px 16px;">
+                                    <form method="POST" action="{{ url_for('patient_intake.update_intake_status_form', intake_id=intake.intake_id) }}" style="display: flex; gap: 6px;">
+                                        <select name="intake_status" style="padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px;">
+                                            {% for s in ['Pending', 'In Progress', 'Completed'] %}
+                                                <option value="{{ s }}" {% if intake.intake_status == s %}selected{% endif %}>{{ s }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" style="padding: 4px 10px; background: #345fd5; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">
+                                            Save
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" style="padding: 24px; text-align: center; color: #64748b;">No patient intake records found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 
