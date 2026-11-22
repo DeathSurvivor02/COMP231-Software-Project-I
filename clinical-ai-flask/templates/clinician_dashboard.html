@@ -1,34 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinician Portal | Clinical AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinician Dashboard - ClinicalAI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    .main-wrap { max-width: 1180px; margin: 28px auto; padding: 0 24px; }
+    .page-subtitle { font-size: 0.92rem; color: var(--muted); margin-bottom: 20px; }
+    .soap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(18, 38, 58, 0.04);
+    }
+    .card h2 { font-size: 1.12rem; color: var(--navy); margin-bottom: 12px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--navy); margin: 12px 0 5px; }
+    input, textarea, select {
+      width: 100%;
+      background: var(--background);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.92rem;
+    }
+    textarea { min-height: 82px; resize: vertical; }
+    .btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    button { border: none; border-radius: 8px; padding: 10px 16px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-secondary { background: var(--teal-light); color: var(--teal); }
+    .btn-success { background: var(--navy); color: #fff; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .badge-draft { background: #fef3c7; color: #b45309; }
+    .badge-final { background: #dcfce7; color: #15803d; }
+    .approval-box { margin-top: 16px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--background); }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .checkbox-row input { width: auto; }
+    .status-msg { margin-top: 10px; font-size: 0.85rem; color: var(--teal); font-weight: 500; }
+    @media (max-width: 850px) { .soap-grid { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-    <header class="navbar">
-        <a href="{{ url_for('home') }}" class="brand">
-            <span class="brand-icon">+</span>
-            Clinical<span class="brand-accent">AI</span>
-        </a>
-        <a href="{{ url_for('home') }}">Back to Home</a>
-    </header>
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-icon">+</div>
+      <span>Clinical<span class="brand-accent">AI</span> &mdash; Clinician Dashboard</span>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/patient-dashboard">Patient Portal</a>
+      <a href="/clinician-dashboard">Clinician Portal</a>
+    </nav>
+  </header>
 
-    <main class="dashboard-page">
-        <span class="eyebrow">CLINICAL DOCUMENTATION</span>
-        <h1>Clinician Portal</h1>
-        <p>Consultation documentation and clinical review.</p>
+  <main class="main-wrap">
+    <p class="page-subtitle">Enter an encounter transcript to generate a draft SOAP note, edit sections, and record clinician approval before finalization.</p>
 
-        <section class="dashboard-panel">
-            <span class="demo-label">Under Development</span>
-            <h2>Clinical Documentation Workspace</h2>
-            <p>
-                Consultation transcript processing, SOAP note drafting,
-                and clinician approval will be developed here.
-            </p>
-            <p>Module responsibility: Ean</p>
-        </section>
-    </main>
+    <div class="soap-grid">
+      <section class="card">
+        <h2>1. Encounter Transcript Entry</h2>
+        <label for="patientName">Patient Name</label>
+        <input id="patientName" type="text" value="Jordan Taylor (Synthetic)" />
+
+        <label for="encounterType">Encounter Type</label>
+        <select id="encounterType">
+          <option value="Outpatient Follow-up">Outpatient Follow-up</option>
+          <option value="Urgent Care Visit">Urgent Care Visit</option>
+          <option value="Telehealth Consultation">Telehealth Consultation</option>
+        </select>
+
+        <label for="transcriptInput">Clinical Encounter Transcript</label>
+        <textarea id="transcriptInput" style="min-height: 220px;" placeholder="Paste or enter encounter transcript..."></textarea>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="generateDraft()">Generate Draft SOAP Note</button>
+          <button class="btn-secondary" onclick="loadSampleTranscript()">Load Synthetic Sample</button>
+        </div>
+        <div id="leftStatus" class="status-msg"></div>
+      </section>
+
+      <section class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="margin-bottom:0;">2. Draft SOAP Note</h2>
+          <span id="noteStatusBadge" class="badge badge-draft">NO DRAFT</span>
+        </div>
+        <div id="noteMeta" style="font-size:0.82rem; color:var(--muted); margin-top:4px;">Generate a draft to begin editing.</div>
+
+        <label for="soapSubjective">Subjective (S)</label>
+        <textarea id="soapSubjective"></textarea>
+
+        <label for="soapObjective">Objective (O)</label>
+        <textarea id="soapObjective"></textarea>
+
+        <label for="soapAssessment">Assessment (A)</label>
+        <textarea id="soapAssessment"></textarea>
+
+        <label for="soapPlan">Plan (P)</label>
+        <textarea id="soapPlan"></textarea>
+
+        <div class="btn-row">
+          <button id="saveDraftBtn" class="btn-secondary" onclick="saveEdits()" disabled>Save Draft Edits</button>
+        </div>
+
+        <div class="approval-box">
+          <strong style="font-size:0.92rem; color:var(--navy);">Clinician Approval &amp; Finalization</strong>
+          <label for="clinicianName">Attending Clinician Name / Signature</label>
+          <input id="clinicianName" type="text" placeholder="e.g., Dr. Ean" />
+          <div class="checkbox-row">
+            <input id="approvalCheckbox" type="checkbox" />
+            <label for="approvalCheckbox" style="margin:0; font-weight:400;">I have reviewed and approve this SOAP note for finalization.</label>
+          </div>
+          <div class="btn-row">
+            <button id="finalizeBtn" class="btn-success" onclick="finalizeNote()" disabled>Approve &amp; Finalize Note</button>
+          </div>
+        </div>
+        <div id="rightStatus" class="status-msg"></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    let currentNoteId = null;
+
+    function loadSampleTranscript() {
+      document.getElementById("patientName").value = "Jordan Taylor (Synthetic)";
+      document.getElementById("transcriptInput").value =
+        "Patient reports 3 days of throbbing frontal headache and mild fatigue.\n" +
+        "Denies fever, vision changes, or neck stiffness.\n" +
+        "Vitals: BP 122/78 mmHg, HR 72 bpm, Temp 98.3 F, SpO2 99% on room air.\n" +
+        "Assessment: Likely tension-type headache exacerbated by dehydration and screen time.\n" +
+        "Plan: Recommend hydration, rest, and ibuprofen 400mg PRN. Follow up if symptoms persist beyond 5 days.";
+      document.getElementById("leftStatus").textContent = "Loaded synthetic encounter transcript.";
+    }
+
+    function renderNote(note) {
+      currentNoteId = note.note_id;
+      document.getElementById("soapSubjective").value = note.soap.subjective;
+      document.getElementById("soapObjective").value = note.soap.objective;
+      document.getElementById("soapAssessment").value = note.soap.assessment;
+      document.getElementById("soapPlan").value = note.soap.plan;
+
+      const isFinal = note.status === "FINALIZED";
+      const badge = document.getElementById("noteStatusBadge");
+      badge.textContent = note.status;
+      badge.className = "badge " + (isFinal ? "badge-final" : "badge-draft");
+
+      document.getElementById("noteMeta").textContent = isFinal
+        ? `Note ${note.note_id} | Finalized by ${note.approved_by} at ${note.approved_at}`
+        : `Note ${note.note_id} | Draft - editable until clinician approval`;
+
+      ["soapSubjective", "soapObjective", "soapAssessment", "soapPlan"].forEach(id => {
+        document.getElementById(id).disabled = isFinal;
+      });
+      document.getElementById("saveDraftBtn").disabled = isFinal;
+      document.getElementById("finalizeBtn").disabled = isFinal;
+    }
+
+    async function generateDraft() {
+      const transcript = document.getElementById("transcriptInput").value;
+      const patient_name = document.getElementById("patientName").value;
+      const encounter_type = document.getElementById("encounterType").value;
+      const res = await fetch("/api/soap/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transcript, patient_name, encounter_type })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        document.getElementById("leftStatus").textContent = "Error: " + data.error;
+        return;
+      }
+      renderNote(data.note);
+      document.getElementById("leftStatus").textContent = "Draft SOAP note generated.";
+      document.getElementById("rightStatus").textContent = "";
+    }
+
+    async function saveEdits() {
+      if (!currentNoteId) return;
+      const soap = {
+        subjective: document.getElementById("soapSubjective").value,
+        objective: document.getElementById("soapObjective").value,
+        assessment: document.getElementById("soapAssessment").value,
+        plan: document.getElementById("soapPlan").value
+      };
+      const res = await fetch("/api/soap/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note_id: currentNoteId, soap })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        document.getElementById("rightStatus").textContent = "Error: " + data.error;
+        return;
+      }
+      renderNote(data.note);
+      document.getElementById("rightStatus").textContent = "Draft edits saved.";
+    }
+
+    async function finalizeNote() {
+      if (!currentNoteId) return;
+      const clinician_name = document.getElementById("clinicianName").value;
+      const approval_confirmed = document.getElementById("approvalCheckbox").checked;
+      const res = await fetch("/api/soap/finalize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note_id: currentNoteId, clinician_name, approval_confirmed })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        document.getElementById("rightStatus").textContent = "Approval required: " + data.error;
+        return;
+      }
+      renderNote(data.note);
+      document.getElementById("rightStatus").textContent = "Note approved and finalized.";
+    }
+  </script>
 </body>
 </html>
