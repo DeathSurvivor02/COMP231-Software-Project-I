@@ -4,7 +4,7 @@
 -- Subsystem: Patient Experience & Intake Workflows
 -- Module Owner: Joel
 -- ============================================================
-
+CREATE DATABASE scribeflow_db;
 CREATE DATABASE IF NOT EXISTS scribeflow_db;
 USE scribeflow_db;
 
@@ -43,6 +43,15 @@ CREATE TABLE IF NOT EXISTS patient_intakes (
         FOREIGN KEY (patient_id)
         REFERENCES patients(patient_id)
         ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS appointments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_name VARCHAR(100) NOT NULL,
+    clinician VARCHAR(100) NOT NULL,
+    datetime VARCHAR(50) NOT NULL,
+    reason TEXT,
+    status VARCHAR(20) DEFAULT 'scheduled'
 );
 
 CREATE INDEX idx_patient_name
