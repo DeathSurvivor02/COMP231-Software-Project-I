@@ -4,7 +4,7 @@
 -- Subsystem: Patient Experience & Intake Workflows
 -- Module Owner: Joel
 -- ============================================================
-CREATE DATABASE scribeflow_db;
+
 CREATE DATABASE IF NOT EXISTS scribeflow_db;
 USE scribeflow_db;
 
